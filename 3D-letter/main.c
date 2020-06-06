@@ -28,10 +28,19 @@ void specialKeys();
 // ----------------------------------------------------------
 double rotate_y=0;
 double rotate_x=0;
+double rotate_z=0;
 
 // ----------------------------------------------------------
 // display() Callback function
 // ----------------------------------------------------------
+void initGL() {
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+   glClearDepth(1.0f);                   // Set background depth to farthest
+   glEnable(GL_DEPTH_TEST);   // Enable depth testing for z-culling
+   glDepthFunc(GL_LEQUAL);    // Set the type of depth-test
+   glShadeModel(GL_SMOOTH);   // Enable smooth shading
+   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+}
 void display(){
 
     //  Clear screen and Z-buffer
@@ -47,6 +56,7 @@ void display(){
     // Rotate when user changes rotate_x and rotate_y
     glRotatef( rotate_x, 1.0, 0.0, 0.0 );
     glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+    glRotatef( rotate_z, 0.0, 0.0, 1.0 );
 
     //The vertical rod
     //Multi-colored side - FRONT
@@ -224,54 +234,61 @@ void display(){
 // ----------------------------------------------------------
 void specialKeys( int key, int x, int y ) {
  
-  //  Right arrow - increase rotation by 5 degree
-  if (key == GLUT_KEY_RIGHT)
+    //  Right arrow - increase rotation by 5 degree
+    if (key == GLUT_KEY_RIGHT)
     rotate_y += 5;
- 
-  //  Left arrow - decrease rotation by 5 degree
-  else if (key == GLUT_KEY_LEFT)
+
+    //  Left arrow - decrease rotation by 5 degree
+    else if (key == GLUT_KEY_LEFT)
     rotate_y -= 5;
- 
-  else if (key == GLUT_KEY_UP)
+
+    else if (key == GLUT_KEY_UP)
     rotate_x += 5;
- 
-  else if (key == GLUT_KEY_DOWN)
+
+    else if (key == GLUT_KEY_DOWN)
     rotate_x -= 5;
- 
-  //  Request display update
-  glutPostRedisplay();
- 
+    
+    else if (key == 's')
+    rotate_z += 5;
+
+    else if (key == 'p')
+    rotate_z -= 5;
+
+    //  Request display update
+    glutPostRedisplay();
+
 }
 
 // ----------------------------------------------------------
 // main() function
 // ----------------------------------------------------------
 int main(int argc, char* argv[]){
-  //  Initialize mid points
+    //  Initialize mid points
     mid.x = 0;
     mid.y = 0;
     mid.z = 0;
-    
-  //  Initialize GLUT and process user parameters
-  glutInit(&argc,argv);
- 
-  //  Request double buffered true color window with Z-buffer
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
- 
-  // Create window
-  glutCreateWindow("Awesome Cube");
 
-  //  Enable Z-buffer depth test
-  glEnable(GL_DEPTH_TEST);
+    //  Initialize GLUT and process user parameters
+    glutInit(&argc,argv);
 
-  // Callback functions
-  glutDisplayFunc(display);
-  glutSpecialFunc(specialKeys);
+    //  Request double buffered true color window with Z-buffer
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(640, 480);   // Set the window's initial width & height
+    glutInitWindowPosition(50, 50);
+    // Create window
+    glutCreateWindow("3D K");
 
-  //  Pass control to GLUT for events
-  glutMainLoop();
- 
-  //  Return to OS
-  return 0;
+    //  Enable Z-buffer depth test
+    glEnable(GL_DEPTH_TEST);
+
+    // Callback functions
+    glutDisplayFunc(display);
+    glutSpecialFunc(specialKeys);
+    initGL();
+    //  Pass control to GLUT for events
+    glutMainLoop();
+
+    //  Return to OS
+    return 0;
  
 }
