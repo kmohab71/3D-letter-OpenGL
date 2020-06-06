@@ -7,7 +7,16 @@
 #else
 #include <GL/glut.h>
 #endif
-
+// ----------------------------------------------------------
+// Struct def
+// ----------------------------------------------------------
+typedef struct midPoints
+{
+    float x ;
+    float y ;
+    float z ;
+}midPoints;
+midPoints mid;
 // ----------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------
@@ -25,80 +34,189 @@ double rotate_x=0;
 // ----------------------------------------------------------
 void display(){
 
-  //  Clear screen and Z-buffer
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    //  Clear screen and Z-buffer
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-  // Reset transformations
-  glLoadIdentity();
+    // Reset transformations
+    glLoadIdentity();
 
-  // Other Transformations
-  // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
-  // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
+    // Other Transformations
+    // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
+    // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
 
-  // Rotate when user changes rotate_x and rotate_y
-  glRotatef( rotate_x, 1.0, 0.0, 0.0 );
-  glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+    // Rotate when user changes rotate_x and rotate_y
+    glRotatef( rotate_x, 1.0, 0.0, 0.0 );
+    glRotatef( rotate_y, 0.0, 1.0, 0.0 );
 
-  // Other Transformations
-  // glScalef( 2.0, 2.0, 0.0 );          // Not included
+    //The vertical rod
+    //Multi-colored side - FRONT
+    glBegin(GL_POLYGON);
+    glColor3f( 1.0, 0.0, 0.0 );
+    glVertex3f( mid.x+0.15, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x+0.15, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.15, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.15, mid.y-0.9, mid.z-0.15 );
+    glEnd();
 
-  //Multi-colored side - FRONT
-  glBegin(GL_POLYGON);
-  glColor3f( 1.0, 0.0, 0.0 );
-  glVertex3f(  0.15, -1.0, -0.15 );
-  glVertex3f(  0.15,  1.0, -0.15 );
-  glVertex3f( -0.15,  1.0, -0.15 );
-  glVertex3f( -0.15, -1.0, -0.15 );
-  glEnd();
+    // White side - BACK
+    glBegin(GL_POLYGON);
+    glColor3f(   1.0,  1.0, 1.0 );
+    glVertex3f( mid.x+0.15, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.15, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.15, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.15, mid.y-0.9, mid.z+0.15 );
+    glEnd();
 
-  // White side - BACK
-  glBegin(GL_POLYGON);
-  glColor3f(   1.0,  1.0, 1.0 );
-  glVertex3f(  0.15, -1.0, 0.15 );
-  glVertex3f(  0.15,  1.0, 0.15 );
-  glVertex3f( -0.15,  1.0, 0.15 );
-  glVertex3f( -0.15, -1.0, 0.15 );
-  glEnd();
- 
-  // Purple side - RIGHT
-  glBegin(GL_POLYGON);
-  glColor3f(  1.0,  0.0,  1.0 );
-  glVertex3f( 0.15, -1.0, -0.15 );
-  glVertex3f( 0.15,  1.0, -0.15 );
-  glVertex3f( 0.15,  1.0,  0.15 );
-  glVertex3f( 0.15, -1.0,  0.15 );
-  glEnd();
- 
-  // Green side - LEFT
-  glBegin(GL_POLYGON);
-  glColor3f(   0.0,  1.0,  0.0 );
-  glVertex3f( -0.15, -1.0,  0.15 );
-  glVertex3f( -0.15,  1.0,  0.15 );
-  glVertex3f( -0.15,  1.0, -0.15 );
-  glVertex3f( -0.15, -1.0, -0.15 );
-  glEnd();
- 
-  // Blue side - TOP
-  glBegin(GL_POLYGON);
-  glColor3f(   0.0,  0.0,  1.0 );
-  glVertex3f(  0.15,  1.0,  0.15 );
-  glVertex3f(  0.15,  1.0, -0.15 );
-  glVertex3f( -0.15,  1.0, -0.15 );
-  glVertex3f( -0.15,  1.0,  0.15 );
-  glEnd();
- 
-  // Red side - BOTTOM
-  glBegin(GL_POLYGON);
-  glColor3f(   0.4,  0.3,  0.0 );
-  glVertex3f(  0.15, -1.0, -0.15 );
-  glVertex3f(  0.15, -1.0,  0.15 );
-  glVertex3f( -0.15, -1.0,  0.15 );
-  glVertex3f( -0.15, -1.0, -0.15 );
-  glEnd();
- 
-  glFlush();
-  glutSwapBuffers();
- 
+    // Purple side - RIGHT
+    glBegin(GL_POLYGON);
+    glColor3f(  1.0,  0.0,  1.0 );
+    glVertex3f( mid.x+0.15, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x+0.15, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x+0.15, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.15, mid.y-0.9, mid.z+0.15 );
+    glEnd();
+
+    // Green side - LEFT
+    glBegin(GL_POLYGON);
+    glColor3f(   0.0,  1.0,  0.0 );
+    glVertex3f( mid.x-0.15, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.15, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.15, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.15, mid.y-0.9, mid.z-0.15 );
+    glEnd();
+
+    // Blue side - TOP
+    glBegin(GL_POLYGON);
+    glColor3f(   0.0,  0.0,  1.0 );
+    glVertex3f( mid.x+0.15,  mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.15,  mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.15,  mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.15,  mid.y+0.9, mid.z+0.15 );
+    glEnd();
+
+    // Red side - BOTTOM
+    glBegin(GL_POLYGON);
+    glColor3f(   0.4,  0.3,  0.0 );
+    glVertex3f( mid.x+0.15, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x+0.15, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.15, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.15, mid.y-0.9, mid.z-0.15 );
+    glEnd();
+    
+    //The 45 rod
+    //side - FRONT
+    glBegin(GL_POLYGON);
+    glColor3f( 1.0, 0.0, 0.0 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z-0.15 );
+    glVertex3f( mid.x+1.15, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x+0.85, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z-0.15 );
+    glEnd();
+
+    // White side - BACK
+    glBegin(GL_POLYGON);
+    glColor3f(   1.0,  1.0, 1.0 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z+0.15 );
+    glVertex3f( mid.x+1.15, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.85, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z+0.15 );
+    glEnd();
+
+    // Purple side - RIGHT
+    glBegin(GL_POLYGON);
+    glColor3f(  1.0,  0.0,  1.0 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z-0.15 );
+    glVertex3f( mid.x+1.15, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x+1.15, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z+0.15 );
+    glEnd();
+
+    // Green side - LEFT
+    glBegin(GL_POLYGON);
+    glColor3f(   0.0,  1.0,  0.0 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z+0.15 );
+    glVertex3f( mid.x+0.85, mid.y+0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.85, mid.y+0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z-0.15 );
+    glEnd();
+
+    // Blue side - TOP
+    glBegin(GL_POLYGON);
+    glColor3f(   0.0,  0.0,  1.0 );
+    glVertex3f(  mid.x+1.15,  mid.y+0.9, mid.z+0.15 );
+    glVertex3f(  mid.x+1.15,  mid.y+0.9, mid.z-0.15 );
+    glVertex3f(  mid.x+0.85,  mid.y+0.9, mid.z-0.15 );
+    glVertex3f(  mid.x+0.85,  mid.y+0.9, mid.z+0.15 );
+    glEnd();
+
+    // Red side - BOTTOM
+    glBegin(GL_POLYGON);
+    glColor3f(   0.4,  0.3,  0.0 );
+    glVertex3f(  mid.x+0.20, mid.y, mid.z-0.15 );
+    glVertex3f(  mid.x+0.20, mid.y, mid.z+0.15 );
+    glVertex3f(  mid.x-0.1 , mid.y, mid.z+0.15 );
+    glVertex3f(  mid.x-0.1 , mid.y, mid.z-0.15 );
+    glEnd();
+    
+    //The 45 rod
+    //side - FRONT
+    glBegin(GL_POLYGON);
+    glColor3f( 1.0, 0.0, 0.0 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z-0.15 );
+    glVertex3f( mid.x+1.15, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x+0.85, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z-0.15 );
+    glEnd();
+
+    // White side - BACK
+    glBegin(GL_POLYGON);
+    glColor3f(   1.0,  1.0, 1.0 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z+0.15 );
+    glVertex3f( mid.x+1.15, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.85, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z+0.15 );
+    glEnd();
+
+    // Purple side - RIGHT
+    glBegin(GL_POLYGON);
+    glColor3f(  1.0,  0.0,  1.0 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z-0.15 );
+    glVertex3f( mid.x+1.15, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x+1.15, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.20, mid.y    , mid.z+0.15 );
+    glEnd();
+
+    // Green side - LEFT
+    glBegin(GL_POLYGON);
+    glColor3f(   0.0,  1.0,  0.0 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z+0.15 );
+    glVertex3f( mid.x+0.85, mid.y-0.9, mid.z+0.15 );
+    glVertex3f( mid.x+0.85, mid.y-0.9, mid.z-0.15 );
+    glVertex3f( mid.x-0.10, mid.y    , mid.z-0.15 );
+    glEnd();
+
+    // Blue side - TOP
+    glBegin(GL_POLYGON);
+    glColor3f(   0.0,  0.0,  1.0 );
+    glVertex3f(  mid.x+1.15,  mid.y-0.9, mid.z+0.15 );
+    glVertex3f(  mid.x+1.15,  mid.y-0.9, mid.z-0.15 );
+    glVertex3f(  mid.x+0.85,  mid.y-0.9, mid.z-0.15 );
+    glVertex3f(  mid.x+0.85,  mid.y-0.9, mid.z+0.15 );
+    glEnd();
+
+    // Red side - BOTTOM
+    glBegin(GL_POLYGON);
+    glColor3f(   0.4,  0.3,  0.0 );
+    glVertex3f(  mid.x+0.20, mid.y, mid.z-0.15 );
+    glVertex3f(  mid.x+0.20, mid.y, mid.z+0.15 );
+    glVertex3f(  mid.x-0.1 , mid.y, mid.z+0.15 );
+    glVertex3f(  mid.x-0.1 , mid.y, mid.z-0.15 );
+    glEnd();
+    
+    
+    glFlush();
+    glutSwapBuffers();
+
 }
 
 // ----------------------------------------------------------
@@ -129,7 +247,11 @@ void specialKeys( int key, int x, int y ) {
 // main() function
 // ----------------------------------------------------------
 int main(int argc, char* argv[]){
- 
+  //  Initialize mid points
+    mid.x = 0;
+    mid.y = 0;
+    mid.z = 0;
+    
   //  Initialize GLUT and process user parameters
   glutInit(&argc,argv);
  
