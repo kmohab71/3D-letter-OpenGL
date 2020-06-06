@@ -1,120 +1,155 @@
-////
-////  main.c
-////  2D-letter
-////
-////  Created by Khaled Mohab on 6/4/20.
-////  Copyright © 2020 Khaled Mohab. All rights reserved.
-////
-//
-#include <GLUT/glut.h>
-#include <stdlib.h>      // LIBRARIES
 #include <stdio.h>
+#include <stdarg.h>
 #include <math.h>
-typedef struct middle
-{
-    float x;
-    float y;
-}middle;
-middle mid;
-int angle = 10;
-int rotate = 1;
-void init()
-{
-    glClearColor (1.0, 1.0, 1.0, 0.0);
-    glMatrixMode (GL_PROJECTION);        //Viewport
-    gluOrtho2D( 0.0,680,0.0,400.0);    //Viewport, i.e., camera position.
+#define GL_GLEXT_PROTOTYPES
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
+// ----------------------------------------------------------
+// Function Prototypes
+// ----------------------------------------------------------
+void display();
+void specialKeys();
+
+// ----------------------------------------------------------
+// Global Variables
+// ----------------------------------------------------------
+double rotate_y=0;
+double rotate_x=0;
+
+// ----------------------------------------------------------
+// display() Callback function
+// ----------------------------------------------------------
+void display(){
+
+  //  Clear screen and Z-buffer
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+  // Reset transformations
+  glLoadIdentity();
+
+  // Other Transformations
+  // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
+  // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
+
+  // Rotate when user changes rotate_x and rotate_y
+  glRotatef( rotate_x, 1.0, 0.0, 0.0 );
+  glRotatef( rotate_y, 0.0, 1.0, 0.0 );
+
+  // Other Transformations
+  // glScalef( 2.0, 2.0, 0.0 );          // Not included
+
+  //Multi-colored side - FRONT
+  glBegin(GL_POLYGON);
+  glColor3f( 1.0, 0.0, 0.0 );
+  glVertex3f(  0.15, -1.0, -0.15 );
+  glVertex3f(  0.15,  1.0, -0.15 );
+  glVertex3f( -0.15,  1.0, -0.15 );
+  glVertex3f( -0.15, -1.0, -0.15 );
+  glEnd();
+
+  // White side - BACK
+  glBegin(GL_POLYGON);
+  glColor3f(   1.0,  1.0, 1.0 );
+  glVertex3f(  0.15, -1.0, 0.15 );
+  glVertex3f(  0.15,  1.0, 0.15 );
+  glVertex3f( -0.15,  1.0, 0.15 );
+  glVertex3f( -0.15, -1.0, 0.15 );
+  glEnd();
+ 
+  // Purple side - RIGHT
+  glBegin(GL_POLYGON);
+  glColor3f(  1.0,  0.0,  1.0 );
+  glVertex3f( 0.15, -1.0, -0.15 );
+  glVertex3f( 0.15,  1.0, -0.15 );
+  glVertex3f( 0.15,  1.0,  0.15 );
+  glVertex3f( 0.15, -1.0,  0.15 );
+  glEnd();
+ 
+  // Green side - LEFT
+  glBegin(GL_POLYGON);
+  glColor3f(   0.0,  1.0,  0.0 );
+  glVertex3f( -0.15, -1.0,  0.15 );
+  glVertex3f( -0.15,  1.0,  0.15 );
+  glVertex3f( -0.15,  1.0, -0.15 );
+  glVertex3f( -0.15, -1.0, -0.15 );
+  glEnd();
+ 
+  // Blue side - TOP
+  glBegin(GL_POLYGON);
+  glColor3f(   0.0,  0.0,  1.0 );
+  glVertex3f(  0.15,  1.0,  0.15 );
+  glVertex3f(  0.15,  1.0, -0.15 );
+  glVertex3f( -0.15,  1.0, -0.15 );
+  glVertex3f( -0.15,  1.0,  0.15 );
+  glEnd();
+ 
+  // Red side - BOTTOM
+  glBegin(GL_POLYGON);
+  glColor3f(   0.4,  0.3,  0.0 );
+  glVertex3f(  0.15, -1.0, -0.15 );
+  glVertex3f(  0.15, -1.0,  0.15 );
+  glVertex3f( -0.15, -1.0,  0.15 );
+  glVertex3f( -0.15, -1.0, -0.15 );
+  glEnd();
+ 
+  glFlush();
+  glutSwapBuffers();
+ 
 }
 
-void display()
-{
-    glClear (GL_COLOR_BUFFER_BIT);
-    glColor3f (0.0, 0.0, 0.0);
-    glFlush ();
+// ----------------------------------------------------------
+// specialKeys() Callback Function
+// ----------------------------------------------------------
+void specialKeys( int key, int x, int y ) {
+ 
+  //  Right arrow - increase rotation by 5 degree
+  if (key == GLUT_KEY_RIGHT)
+    rotate_y += 5;
+ 
+  //  Left arrow - decrease rotation by 5 degree
+  else if (key == GLUT_KEY_LEFT)
+    rotate_y -= 5;
+ 
+  else if (key == GLUT_KEY_UP)
+    rotate_x += 5;
+ 
+  else if (key == GLUT_KEY_DOWN)
+    rotate_x -= 5;
+ 
+  //  Request display update
+  glutPostRedisplay();
+ 
 }
-void drawLetter()
-{
-    glBegin(GL_LINES);
-    
-    glVertex3f(mid.x-40.0, mid.y-127.5, 1);
-    glVertex3f(mid.x-40.0, mid.y+127.5, 1);
 
-    glVertex3f(mid.x-40.0, mid.y+127.5,1);
-    glVertex3f(mid.x-20.0, mid.y+127.5,1);
+// ----------------------------------------------------------
+// main() function
+// ----------------------------------------------------------
+int main(int argc, char* argv[]){
+ 
+  //  Initialize GLUT and process user parameters
+  glutInit(&argc,argv);
+ 
+  //  Request double buffered true color window with Z-buffer
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+ 
+  // Create window
+  glutCreateWindow("Awesome Cube");
 
-    glVertex3f(mid.x-20.0, mid.y+127.5,1);
-    glVertex3f(mid.x-20.0, mid.y+17.5, 1);
+  //  Enable Z-buffer depth test
+  glEnable(GL_DEPTH_TEST);
 
-    glVertex3f(mid.x-20.0, mid.y+17.5, 1);
-    glVertex3f(mid.x+20.0, mid.y+127.5, 1);
+  // Callback functions
+  glutDisplayFunc(display);
+  glutSpecialFunc(specialKeys);
 
-    glVertex3f(mid.x+20.0, mid.y+127.5, 1);
-    glVertex3f(mid.x+40.0, mid.y+127.5, 1);
-
-    glVertex3f(mid.x+40.0, mid.y+127.5, 1);
-    glVertex3f(mid.x, mid.y-2.5, 1);
-
-    glVertex3f(mid.x, mid.y-2.5, 1);
-    glVertex3f(mid.x+40.0, mid.y-127.5, 1);
-
-    glVertex3f(mid.x+40.0, mid.y-127.5, 1);
-    glVertex3f(mid.x+20.0, mid.y-127.5, 1);
-
-    glVertex3f(mid.x+20.0, mid.y-127.5, 1);
-    glVertex3f(mid.x-20.0, mid.y-17.5,  1);
-
-    glVertex3f(mid.x-20.0, mid.y-17.5,  1);
-    glVertex3f(mid.x-20.0, mid.y-127.5, 1);
-
-    glVertex3f(mid.x-20.0, mid.y-127.5, 1);
-    glVertex3f(mid.x-40.0, mid.y-127.5, 1);
-    
-    glEnd();
-
-    glFlush ();
-}
-void Reshapefunc()
-{
-    glTranslatef(mid.x, mid.y, 1);
-    glPushMatrix();
-    glRotatef(angle, 0, 0, 1);
-    glPushMatrix();
-    glTranslatef(-mid.x, -mid.y, -1);
-}
-void Mousefun(int btn, int state, int x, int y)
-{
-    if(btn==GLUT_RIGHT_BUTTON)
-    {
-        rotate = 0;
-    }
-    if(btn==GLUT_LEFT_BUTTON)
-    {
-        rotate = 1;
-    }
-}
-void Idlefunc()
-{
-    drawLetter();
-    if (rotate == 1)
-    {
-        Reshapefunc();
-        glutPostRedisplay();
-    }
-}
-int main(int argc, char** argv)
-{
-    mid.x=205.0;
-    mid.y=207.5;
-    glutInit(&argc, argv);
-    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize (600, 300);
-    glutInitWindowPosition (100, 100);
-    glutCreateWindow (argv[0]);
-    glutDisplayFunc(display);
-    glutReshapeFunc(Reshapefunc);
-    glutMouseFunc(Mousefun);
-    glutIdleFunc(Idlefunc);
-    init ();
-    glutMainLoop();
-    return 0;
+  //  Pass control to GLUT for events
+  glutMainLoop();
+ 
+  //  Return to OS
+  return 0;
+ 
 }
