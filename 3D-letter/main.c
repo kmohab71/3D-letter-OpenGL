@@ -26,6 +26,7 @@ void specialKeys();
 // ----------------------------------------------------------
 // Global Variables
 // ----------------------------------------------------------
+int rotate=0;
 double rotate_y=0;
 double rotate_x=0;
 double rotate_z=0;
@@ -48,10 +49,6 @@ void display(){
 
     // Reset transformations
     glLoadIdentity();
-
-    // Other Transformations
-    // glTranslatef( 0.1, 0.0, 0.0 );      // Not included
-    // glRotatef( 180, 0.0, 1.0, 0.0 );    // Not included
 
     // Rotate when user changes rotate_x and rotate_y
     glRotatef( rotate_x, 1.0, 0.0, 0.0 );
@@ -249,16 +246,28 @@ void specialKeys( int key, int x, int y ) {
     rotate_x -= 5;
     
     else if (key == 's')
-    rotate_z += 5;
+    {
+        rotate_z += 5;
+        rotate=1;
+    }
 
     else if (key == 'p')
-    rotate_z -= 5;
+    {
+        rotate_z -= 5;
+        rotate=0;
+    }
 
     //  Request display update
     glutPostRedisplay();
 
 }
-
+void idlefun(){
+    if (rotate == 1)
+    {
+        rotate_z+=5;
+        display();
+    }
+}
 // ----------------------------------------------------------
 // main() function
 // ----------------------------------------------------------
@@ -284,6 +293,7 @@ int main(int argc, char* argv[]){
     // Callback functions
     glutDisplayFunc(display);
     glutSpecialFunc(specialKeys);
+    glutIdleFunc(idlefun);
     initGL();
     //  Pass control to GLUT for events
     glutMainLoop();
