@@ -231,29 +231,27 @@ void display(){
 // ----------------------------------------------------------
 void specialKeys( int key, int x, int y ) {
  
-    //  Right arrow - increase rotation by 5 degree
+    //  Right arrow - increase y-axis rotation by 5 degree
     if (key == GLUT_KEY_RIGHT)
     rotate_y += 5;
 
-    //  Left arrow - decrease rotation by 5 degree
+    //  Left arrow - decrease y-axis rotation by 5 degree
     else if (key == GLUT_KEY_LEFT)
     rotate_y -= 5;
-
+//  up arrow - increase x-axis rotation by 5 degree
     else if (key == GLUT_KEY_UP)
     rotate_x += 5;
-
+//  Left arrow - decrease x-axis rotation by 5 degree
     else if (key == GLUT_KEY_DOWN)
     rotate_x -= 5;
-    
+//  s key - start the z-axis rotation
     else if (key == 's')
     {
-        rotate_z += 5;
         rotate=1;
     }
-
+//  p key - stop the z-axis rotation
     else if (key == 'p')
     {
-        rotate_z -= 5;
         rotate=0;
     }
 
